@@ -1,6 +1,6 @@
 # A Security Group acts as a virtual firewall for the instance
 resource "aws_security_group" "instance_sg" {
-  name        = "sg-instance-${var.environment}"
+  name        = "instance-${var.environment}"
   description = "Allow HTTP and SSH inbound traffic"
 
   # Allow HTTP traffic from anywhere
