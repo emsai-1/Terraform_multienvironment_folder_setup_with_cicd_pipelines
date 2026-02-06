@@ -31,7 +31,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      # --- THIS IS THE MAIN CHANGE ---
+      # --- THIS IS THE MAIN CHANGE -
       # It now uses the access keys from GitHub Environment Secrets.
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v4
