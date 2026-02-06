@@ -22,7 +22,7 @@ private_subnets   = ["10.10.10.0/24"]
 # --- EC2 Instance Module Variables ---
 # IMPORTANT: Go to the AWS EC2 Console in your selected region to find the
 # latest AMI ID for "Amazon Linux 2023". This ID changes frequently.
-ami_id            = "ami-0c55b159cbfafe1f0" 
+ami_id            = "ami-0532be01f26a3de55"
 instance_type     = "t2.micro"
 
 
