@@ -30,6 +30,10 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+      - name: Debug Environment Variables
+        run: |
+          echo "The selected AWS Region is: ${{ vars.AWS_REGION }}"
+          echo "The selected Environment is: ${{ vars.ENVIRONMENT }}"
 
       # --- THIS IS THE MAIN CHANGE -
       # It now uses the access keys from GitHub Environment Secrets.
