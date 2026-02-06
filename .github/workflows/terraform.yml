@@ -1,0 +1,67 @@
+name: 'Terraform CI/CD for AWS'
+
+on:
+  push:
+   branches:
+      - main
+      - release/*
+      - develop
+  pull_request:
+    branches:
+      - main
+      - release/*
+      - develop
+
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  terraform:
+    name: 'Terraform'
+    runs-on: ubuntu-latest
+    environment:
+      name: ${{ (github.ref == 'refs/heads/main' && 'prod') || (startsWith(github.ref, 'refs/heads/release/') && 'qa') || 'dev' }}
+    defaults:
+      run:
+       working-directory: ${{ (github.ref == 'refs/heads/main' && 'environments/prod') || (startsWith(github.ref, 'refs/heads/release/') && 'environments/qa') || 'environments/dev' }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # --- THIS IS THE MAIN CHANGE ---
+      # It now uses the access keys from GitHub Environment Secrets.
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ vars.AWS_REGION }}
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+
+      - name: Terraform Init
+        id: init
+        run: terraform init
+
+      # ...The rest of the Terraform steps are exactly the same...
+
+      - name: Terraform Plan
+        id: plan
+        run: terraform plan -no-color -out=tfplan
+        env:
+          # Your TF_VARs are still needed if you're not using .tfvars files
+          TF_VAR_environment: ${{ vars.ENVIRONMENT }}
+          TF_VAR_cpu: ${{ vars.CPU }}
+          # ... etc
+
+      - name: Terraform Apply
+        if: github.event_name == 'push' && (github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/heads/release/') || github.ref == 'refs/heads/develop')
+        run: terraform apply -auto-approve tfplan
+        env:
+          TF_VAR_environment: ${{ vars.ENVIRONMENT }}
+          TF_VAR_cpu: ${{ vars.CPU }}
+          # ... etc
