@@ -2,6 +2,7 @@
 resource "aws_security_group" "instance_sg" {
   name        = "instance-${var.environment}"
   description = "Allow HTTP and SSH inbound traffic"
+  vpc_id = var.vpc_id
 
   # Allow HTTP traffic from anywhere
   ingress {

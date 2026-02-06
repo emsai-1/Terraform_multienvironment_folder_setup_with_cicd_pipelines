@@ -20,6 +20,7 @@ module "ec2_web_app" {
   subnet_id = module.vpc.public_subnet_ids[0] # Place instance in the first public subnet
 
   # Pass variables from the workflow
+  vpc_id = module.vpc.vpc_id
   environment   = var.environment
   instance_type = var.instance_type
   ami_id        = var.ami_id
