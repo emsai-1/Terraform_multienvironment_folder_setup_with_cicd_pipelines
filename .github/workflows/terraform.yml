@@ -71,7 +71,7 @@ jobs:
 
       - name: Terraform Apply
         if: github.event_name == 'push' && (github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/heads/release/') || github.ref == 'refs/heads/develop')
-        run: terraform apply -auto-approve tfplan
+        run: terraform apply -input=false tfplan
         env:
           TF_VAR_environment: ${{ vars.ENVIRONMENT }}
           TF_VAR_cpu: ${{ vars.CPU }}
