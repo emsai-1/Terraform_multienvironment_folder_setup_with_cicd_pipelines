@@ -34,6 +34,13 @@ jobs:
         run: |
           echo "The selected AWS Region is: ${{ vars.AWS_REGION }}"
           echo "The selected Environment is: ${{ vars.ENVIRONMENT }}"
+      - name: Verify Dynamic Selections
+        run: |
+          echo "Current Branch: ${{ github.ref_name }}"
+          echo "-------------------------------------------"
+          echo "Selected Environment Name: ${{ (github.ref == 'refs/heads/main' && 'prod') || (startsWith(github.ref, 'refs/heads/release/') && 'qa') || 'dev' }}"
+          echo "Selected Working Directory: ${{ (github.ref == 'refs/heads/main' && 'environments/prod') || (startsWith(github.ref, 'refs/heads/release/') && 'environments/qa') || 'environments/dev' }}"
+  
 
       # --- THIS IS THE MAIN CHANGE -
       # It now uses the access keys from GitHub Environment Secrets.
