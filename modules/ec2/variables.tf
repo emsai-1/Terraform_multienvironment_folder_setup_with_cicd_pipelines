@@ -23,3 +23,8 @@ variable "app_port" {
   type        = number
   default     = 80
 }
+
+variable "vpc_id" {
+    description = "The ID of the VPC where the instance and security group will be deployed."
+  type        = string  
+}
