@@ -50,7 +50,7 @@ resource "aws_instance" "app_server" {
   subnet_id     = var.subnet_id
 
   vpc_security_group_ids = [aws_security_group.instance_sg.id]
-  user_data              = data.template_file.user_data.rendered # Run the script on boot
+  user_data              = data.template_file.user_data.rendered # Run the script on boo
   
   tags = {
     Name = "AppServer-${var.environment}"
