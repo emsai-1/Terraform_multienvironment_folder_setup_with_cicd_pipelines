@@ -58,7 +58,7 @@ jobs:
         id: init
         run: terraform init
 
-      # ...The rest of the Terraform steps are exactly the same...
+      # ...The rest of the Terraform steps are exactly the same
 
       - name: Terraform Plan
         id: plan
