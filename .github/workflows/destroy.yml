@@ -1,5 +1,5 @@
 name: 'Terraform Manually Destroy All Resources'
-
+#destroys all resources
 on:
   workflow_dispatch:
     inputs:
