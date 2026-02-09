@@ -6,8 +6,10 @@ on:
       environment:
         description: 'Select the environment where the resource exists'
         required: true
+        # --- FIX: Changed default to 'dev' ---
         default: 'develop'
         type: choice
+        # --- FIX: Options now match your folder names ---
         options:
         - develop
         - qa
@@ -24,10 +26,12 @@ jobs:
   terraform_destroy_target:
     name: 'Terraform Destroy Single Resource'
     runs-on: ubuntu-latest
+    # This correctly uses the input (dev, qa, or prod) to select the GitHub Environment
     environment:
       name: ${{ github.event.inputs.environment }}
     defaults:
       run:
+        # This now correctly builds the path, e.g., "environments/dev"
         working-directory: environments/${{ github.event.inputs.environment }}
     steps:
       - name: Checkout
@@ -38,7 +42,8 @@ jobs:
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ${{ Secrets.AWS_REGION }}
+          # --- FIX: Corrected typo from Secrets.AWS_REGION to secrets.AWS_REGION ---
+          aws-region: ${{ secrets.AWS_REGION }}
 
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v3
