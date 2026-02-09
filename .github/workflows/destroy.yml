@@ -1,4 +1,4 @@
-name: 'Terraform Manual Destroy'
+name: 'Terraform Manually Destroy All Resources'
 
 on:
   workflow_dispatch:
