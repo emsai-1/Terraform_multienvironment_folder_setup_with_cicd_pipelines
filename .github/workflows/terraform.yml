@@ -11,6 +11,7 @@ on:
       - main
       - release/*
       - develop
+  workflow_dispatch: 
 
 
 permissions:
