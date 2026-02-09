@@ -1,31 +1,32 @@
-name: 'Manual Smoke Test (Deploy and Destroy)'
+name: 'Terraform Manual Destroy'
 
 on:
   workflow_dispatch:
     inputs:
       environment:
-        description: 'Select the environment to build and then destroy'
+        description: 'Select the environment to DESTROY'
         required: true
+        default: 'dev'
         type: choice
         options:
-          - dev
-          - qa # Intentionally leaving 'prod' out for safety
-        default: 'dev'
+        - dev
+        - qa
+        - prod
+
+permissions:
+  contents: read
 
 jobs:
-  deploy-and-destroy:
-    name: 'Deploy and Destroy'
+  terraform_destroy:
+    name: 'Terraform Destroy'
     runs-on: ubuntu-latest
-
     environment:
       name: ${{ github.event.inputs.environment }}
-
     defaults:
       run:
         working-directory: environments/${{ github.event.inputs.environment }}
-
     steps:
-      - name: Checkout Code
+      - name: Checkout
         uses: actions/checkout@v4
 
       - name: Configure AWS Credentials
@@ -33,20 +34,13 @@ jobs:
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ${{ vars.AWS_REGION }}
+          aws-region: ${{ secrets.AWS_REGION }}
 
-      - name: Create .auto.tfvars.json from GitHub Vars
-        run: echo '${{ toJSON(vars) }}' > ci.auto.tfvars.json
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
 
       - name: Terraform Init
         run: terraform init
-
-      - name: Terraform Apply
-        run: terraform apply -auto-approve
-
-      - name: Wait for 5 Minutes
-        run: sleep 300
-        shell: bash
 
       - name: Terraform Destroy
         run: terraform destroy -auto-approve
