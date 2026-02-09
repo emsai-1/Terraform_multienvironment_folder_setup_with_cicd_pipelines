@@ -7,11 +7,11 @@ on:
         description: 'Select the environment where the resource exists'
         required: true
         # --- FIX: Changed default to 'dev' ---
-        default: 'develop'
+        default: 'dev'
         type: choice
         # --- FIX: Options now match your folder names ---
         options:
-        - develop
+        - dev
         - qa
         - prod
       resource_address:
