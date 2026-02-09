@@ -1,10 +1,10 @@
-name: 'Terraform Manually Destroy All Resources'
+name: 'Terraform Single Resource Destroy'
 
 on:
   workflow_dispatch:
     inputs:
       environment:
-        description: 'Select the environment to DESTROY'
+        description: 'Select the environment where the resource exists'
         required: true
         default: 'dev'
         type: choice
@@ -12,13 +12,17 @@ on:
         - dev
         - qa
         - prod
+      resource_address:
+        description: 'The full address of the single resource to destroy (e.g., aws_instance.my_ec2)'
+        required: true
+        type: string
 
 permissions:
   contents: read
 
 jobs:
-  terraform_destroy:
-    name: 'Terraform Destroy'
+  terraform_destroy_target:
+    name: 'Terraform Destroy Single Resource'
     runs-on: ubuntu-latest
     environment:
       name: ${{ github.event.inputs.environment }}
@@ -40,7 +44,8 @@ jobs:
         uses: hashicorp/setup-terraform@v3
 
       - name: Terraform Init
+        id: init
         run: terraform init
 
-      - name: Terraform Destroy
-        run: terraform destroy -auto-approve
+      - name: Destroy SINGLE Targeted Resource
+        run: terraform destroy -auto-approve -target=${{ github.event.inputs.resource_address }}

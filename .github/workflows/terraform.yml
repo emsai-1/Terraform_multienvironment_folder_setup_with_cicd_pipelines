@@ -1,4 +1,4 @@
-name: 'Terraform CI/CD for AWS'
+name: 'Terraform create resources for AWS'
 
 on:
   push:
@@ -11,7 +11,6 @@ on:
       - main
       - release/*
       - develop
-
 
 permissions:
   contents: read
